@@ -1,31 +1,29 @@
 import json
 
-class Strike:
+class Create:
 
-    def __init__(self):
-        self.meta_response_object = {}
-
-    def Create(self,actionHandler,nextActionHandler):
-        self.meta_response_object["status"] = 200
-        self.meta_response_object["body"] = {
-            "actionHandler" : actionHandler,
-            "nextActionHandler" : nextActionHandler
+    def __init__(self,actionHandler,nextActionHandler):
+        self.meta_response_object = {
+            "status":200,
+            "body":{
+                "actionHandler" : actionHandler,
+                "nextActionHandler" : nextActionHandler,
+                "questionArray": []
+            }
         }
-        return self
 
     def Question(self,qContext):
-        self.meta_response_object["body"].update({
-            "questionArray":[{
+        self.meta_response_object["body"]["questionArray"].append(
+            {
                 "question":{
                     "qContext":qContext
                 }
-            }] 
-        })  
+            })  
         return self 
 
     def QuestionCard(self):  
         self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["question"].update(
-            questionType="qCard"
+            questionType="Card"
         )  
         return self
 
@@ -66,17 +64,70 @@ class Strike:
             }
         ) 
         return self
+    
+    def Answer(self,multiple_select):
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+                answer={
+                    "multipleSelect":multiple_select
+                }
+        )
+
+        return self 
+
+    def AnswerCardArray(self,card_orientation):
+        multipleSelectVal = self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["multipleSelect"]
+        
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+            answer={
+                    "multipleSelect":multipleSelectVal,
+                    "card-orientation":card_orientation,
+                    "responseType":"Card",
+                    "qCard":[]
+                }
+        )
+
+        return self   
+
+    def AnswerCard(self):
+
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"].append(
+            []
+        )
+
+        return self 
+
+    def SetHeaderToAnswer(self,card_context,width):
+
+        q_card_array = self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"]
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"][len(q_card_array)-1].append(
+            {   
+                "type":"header",
+                "descriptor":{
+                    "context-object":card_context,
+                    "card-type":width
+                }
+            }
+        )
+
+        return self
+
+    def AddGraphicRowToAnswer(self,graphic_type,url,thumbnail_url):
+
+        q_card_array = self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"]
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"][len(q_card_array)-1].append(
+            {   
+                "type":graphic_type,
+                "descriptor":{
+                    "value":url,
+                    "thumbnail":thumbnail_url
+                }
+            }
+        )
+
+        return self    
 
     def ToJson(self):
         json_data = json.dumps(vars(self)["meta_response_object"])
         return json_data 
 
-if __name__=="__main__":
-    
-    strikeObj = Strike()  
-    strikeObj.Create("golu","http://www.fb.com").Question("key1").QuestionCard().SetHeaderToQuestion(2,"HALF").\
-    AddGraphicRowToQuestion("pic_row",["http://www.pop.com","http://valti.com"],["http://www.pop.com.tbn","http://valti.com.tbn"]).\
-    AddGraphicRowToQuestion("video_row",["http://www.pop.com","http://valti.com"],["http://www.pop.com.tbn","http://valti.com.tbn"]).\
-    AddTextRowToQuestion("h1","some testing done here","blue",True)
-    
-    print(strikeObj.ToJson())      
+     
