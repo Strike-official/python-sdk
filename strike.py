@@ -1,5 +1,19 @@
 import json
 
+
+HALF_WIDTH="HALF"
+FULL_WIDTH="FULL"
+PICTURE_ROW="pic_row"
+VIDEO_ROW="video_row"
+HORIZONTAL_ORIENTATION="HORIZONTAL"
+VERTICAL_ORIENTATION="VERTICAL"
+H1 = "h1"
+H2 = "h2"
+H3 = "h3"
+H4 = "h4"
+H5 = "h5"
+H6 = "h6"
+
 class Create:
 
     def __init__(self,actionHandler,nextActionHandler):
@@ -11,6 +25,9 @@ class Create:
                 "questionArray": []
             }
         }
+
+        #import the different modules
+        # from .stub import Question,Answer
 
     def Question(self,qContext):
         self.meta_response_object["body"]["questionArray"].append(
