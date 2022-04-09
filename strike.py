@@ -29,6 +29,7 @@ class Create:
         #import the different modules
         # from .stub import Question,Answer
 
+## Stub
     def Question(self,qContext):
         self.meta_response_object["body"]["questionArray"].append(
             {
@@ -38,6 +39,16 @@ class Create:
             })  
         return self 
 
+    def Answer(self,multiple_select):
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+                answer={
+                    "multipleSelect":multiple_select
+                }
+        )
+
+        return self    
+
+## Question Card interface
     def QuestionCard(self):  
         self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["question"].update(
             questionType="Card"
@@ -82,15 +93,7 @@ class Create:
         ) 
         return self
     
-    def Answer(self,multiple_select):
-        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
-                answer={
-                    "multipleSelect":multiple_select
-                }
-        )
-
-        return self 
-
+## Answer Card interface    
     def AnswerCardArray(self,card_orientation):
         multipleSelectVal = self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["multipleSelect"]
         
@@ -103,8 +106,8 @@ class Create:
                 }
         )
 
-        return self   
-
+        return self       
+    
     def AnswerCard(self):
 
         self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"].append(
@@ -141,7 +144,62 @@ class Create:
             }
         )
 
-        return self    
+        return self 
+
+## Text Interface
+    def QuestionText(self):  
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["question"].update(
+            questionType="Text"
+        )  
+        return self   
+
+    def SetTextToQuestion(self,question_text):
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["question"].update(
+            qText=question_text
+        ) 
+
+        return self
+
+## Text Input interface
+    def TextInput(self):    
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+            answer={
+                    "responseType":"Text-Input"
+                }
+        )
+
+        return self
+
+## Location Input interface        
+    def LocationInput(self,location_input_text):  
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+            answer={
+                    "responseType":"Location-Input",
+                    "qLocation-Input": [location_input_text] 
+                }
+        )
+
+        return self
+
+## Number Input interface        
+    def NumberInput(self):  
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+            answer={
+                    "responseType":"Number-Input"
+                }
+        )
+
+        return self
+
+## Date Input interface        
+    def DateInput(self):  
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1].update(
+            answer={
+                    "responseType":"Date-Input"
+                }
+        )
+
+        return self
 
     def ToJson(self):
         json_data = json.dumps(vars(self)["meta_response_object"])
