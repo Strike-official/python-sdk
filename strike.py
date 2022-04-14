@@ -21,7 +21,7 @@ class Create:
             "status":200,
             "body":{
                 "actionHandler" : actionHandler,
-                "nextActionHandler" : nextActionHandler,
+                "nextActionHandlerURL" : nextActionHandler,
                 "questionArray": []
             }
         }
@@ -90,8 +90,10 @@ class Create:
                 "bold":bold
             }
             }
-        ) 
+        )
         return self
+
+
     
 ## Answer Card interface    
     def AnswerCardArray(self,card_orientation):
@@ -146,6 +148,20 @@ class Create:
 
         return self 
 
+    def AddTextRowToAnswer(self,row_type,value,color,bold):
+        q_card_array = self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"]
+
+        self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["answer"]["qCard"][len(q_card_array)-1].append(
+            {"type":row_type,
+             "descriptor":{
+                "value":[value],
+                "color":color,
+                "bold":bold
+            }
+            }
+        )
+        return self
+
 ## Text Interface
     def QuestionText(self):  
         self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["question"].update(
@@ -156,8 +172,7 @@ class Create:
     def SetTextToQuestion(self,question_text):
         self.meta_response_object["body"]["questionArray"][len(self.meta_response_object["body"]["questionArray"])-1]["question"].update(
             qText=question_text
-        ) 
-
+        )
         return self
 
 ## Text Input interface
@@ -201,8 +216,12 @@ class Create:
 
         return self
 
+    def Data(self):
+        data = vars(self)["meta_response_object"]
+        return data
+
     def ToJson(self):
         json_data = json.dumps(vars(self)["meta_response_object"])
-        return json_data 
+        return json_data
 
      
